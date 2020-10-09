@@ -1,4 +1,6 @@
-  function geraData() {
+const pool = require('../Database/db')
+ 
+ function geraData() {
     const d = new Date();
     return d.toLocaleString();
   }
@@ -150,4 +152,4 @@
     return aux;
   }
 
-  module.exports = service;
+  module.exports = services;
