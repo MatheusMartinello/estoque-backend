@@ -2,6 +2,11 @@ const express = require('express');
 const router =  express.Router();
 const pool = require('../Database/db')
 const servico = require('../services/Services');
+function controllerCompras() {
+  return (req, res, next) => {
+    next();
+  };
+}
 router.post("/proposta", async (req, res) => {
     const { idusuario, idproduto } = req.body;
     const geraCotacaoId = await servico.geraPedidoCotacao(idusuario);
@@ -51,4 +56,4 @@ router.post("/recebido", async (req, res) => {
       res.status(400).send("Nao foi possivel dar entrada");
     }
 });
-module.exports = (controlerMain, (app) => app.use("/compras", router));
+module.exports = (controllerCompras, (app) => app.use("/compras", router));

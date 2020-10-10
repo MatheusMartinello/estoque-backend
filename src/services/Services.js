@@ -1,11 +1,11 @@
 const pool = require('../Database/db')
- 
- function geraData() {
+const service = {
+  geraData() {
     const d = new Date();
     return d.toLocaleString();
-  }
+  },
   // Verifica Produto base de dados
-  async function verificaNaBase({ idEmpresa, nome, idprodutos }) {
+  async verificaNaBase({ idEmpresa, nome, idprodutos }) {
     console.log(nome);
     console.log(idEmpresa);
     try {
@@ -18,26 +18,26 @@ const pool = require('../Database/db')
     } catch (error) {
       console.error(error);
     }
-  }
+  },
   //gera nota fiscal e qual o tipo da nota
-  async function geraNota(tipo) {
+  async geraNota(tipo) {
     pool.query("INSERT INTO notafiscal(datavenda,tipo) values($1,$2)", [
       geraData(),
       tipo,
     ]);
     const result = await pool.query("SELECT MAX(idnotafiscal) from notafiscal");
     return result.rows[0].max;
-  }
+  },
   //pega valores dos produtos do fornecedor
-  async function pegaValoresProdutoF({ idfornecedor, idprodutof }) {
+  async pegaValoresProdutoF({ idfornecedor, idprodutof }) {
     const result = await pool.query(
       'select * from "produtosFornecedor" pf where "idProdutosE" = $1 and idfornecedor = $2',
       [idfornecedor, idprodutof]
     );
     return result;
-  }
+  },
   //gera produto
-  async function criaProduto(objeto, idestoques) {
+  async criaProduto(objeto, idestoques) {
     const validaProduto = await pool.query(
       "SELECT * from produtos where nome like $1 and idestoques = $2",
       [objeto.nome.toUpperCase(), idestoques]
@@ -61,17 +61,17 @@ const pool = require('../Database/db')
       );
       return result.rows;
     }
-  }
+  },
   //pega produto pelo ID 
-  async function getIdProduto(objeto, idestoques) {
+  async getIdProduto(objeto, idestoques) {
     const validaProduto = await pool.query(
       "SELECT * from produtos where nome like $1 and idestoques = $2",
       [objeto.nome.toUpperCase(), idestoques]
     );
     return validaProduto.rows[0].idprodutos;
-  }
+  },
   //gera Compras no fornecedor
-  async function geraComprasF(objeto, req, idnotafiscal) {
+  async geraComprasF(objeto, req, idnotafiscal) {
     const { idestoques, idfornecedor, idprodutof, qnt, custo } = req.body;
     console.log("Aqui estamos");
     await pool.query(
@@ -87,18 +87,18 @@ const pool = require('../Database/db')
       ]
     );
     return true;
-  }
+  },
 
-  function getRandomInt() {
+  getRandomInt() {
     return Math.random() * (45 - 20) + 20;
-  }
-  function geraPrazo() {
+  },
+   geraPrazo() {
     const days = getRandomInt();
     let date = new Date();
     date.setDate(date.getDate() + days);
     return date;
-  }
-  async function geraPedidoCotacao(idusuario) {
+  },
+  async geraPedidoCotacao(idusuario) {
     try {
       await pool.query("insert into cotacoes(idusuario,data)values($1,$2)", [
         idusuario,
@@ -109,8 +109,8 @@ const pool = require('../Database/db')
     } catch (error) {
       console.error(error);
     }
-  }
-  async function geraCotacoesNosEstoques(idproduto, idusuario, idcotacao) {
+  },
+  async geraCotacoesNosEstoques(idproduto, idusuario, idcotacao) {
     let resultadoV = [];
     try {
       const validaProdutosDisponiveis = await pool.query(
@@ -138,8 +138,8 @@ const pool = require('../Database/db')
     } catch (error) {
       console.error(error);
     }
-  }
-  async function pegaMelhorProposta(idproposta) {
+  },
+  async pegaMelhorProposta(idproposta) {
     const pegaProposta = await pool.query(
       "SELECT * from cotacoes_produtos where idcotacoes = $1",
       [idproposta]
@@ -151,5 +151,5 @@ const pool = require('../Database/db')
     }
     return aux;
   }
-
-  module.exports = services;
+}
+module.exports =  service;
