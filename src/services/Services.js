@@ -13,8 +13,8 @@ const service = {
         "SELECT * FROM produtos WHERE nome like $1 and idestoques = $2",
         [nome.toUpperCase(), parseInt(idEmpresa, 10)]
       );
-      if (produto.rows.length === 0) return produto;
-      else return produto;
+      if (produto.rows.length === 0) return null;
+      else return produto.rows[0];
     } catch (error) {
       console.error(error);
     }
@@ -92,7 +92,7 @@ const service = {
   getRandomInt() {
     return Math.random() * (45 - 20) + 20;
   },
-   geraPrazo() {
+  geraPrazo() {
     const days = getRandomInt();
     let date = new Date();
     date.setDate(date.getDate() + days);
@@ -152,4 +152,4 @@ const service = {
     return aux;
   }
 }
-module.exports =  service;
+module.exports = service;
