@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../Database/db');
-const servico = require('../services/Services');
 function controllerCriacao() {
   return (req, res, next) => {
     next();

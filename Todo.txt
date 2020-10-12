@@ -1,7 +1,5 @@
 fazer controller de venda;
 fazer controller de compra;
-
-
 verificar as regras de negocio; 
 
 
