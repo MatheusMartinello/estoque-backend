@@ -5,14 +5,13 @@ const service = {
     return d.toLocaleString();
   },
   // Verifica Produto base de dados
-  async verificaNaBase({ idEmpresa, nome, idprodutos }) {
-    console.log(nome);
-    console.log(idEmpresa);
+  async verificaNaBase(idEmpresa, nome) {
     try {
       const produto = await pool.query(
         "SELECT * FROM produtos WHERE nome like $1 and idestoques = $2",
-        [nome.toUpperCase(), parseInt(idEmpresa, 10)]
+        [nome, parseInt(idEmpresa, 10)]
       );
+      console.log(produto.rows.length)
       if (produto.rows.length === 0) return null;
       else return produto.rows[0];
     } catch (error) {
@@ -21,8 +20,8 @@ const service = {
   },
   //gera nota fiscal e qual o tipo da nota
   async geraNota(tipo) {
-    pool.query("INSERT INTO notafiscal(datavenda,tipo) values($1,$2)", [
-      geraData(),
+    pool.query("INSERT INTO notafiscal(data,tipo) values($1,$2)", [
+      service.geraData(),
       tipo,
     ]);
     const result = await pool.query("SELECT MAX(idnotafiscal) from notafiscal");
@@ -88,7 +87,6 @@ const service = {
     );
     return true;
   },
-
   getRandomInt() {
     return Math.random() * (45 - 20) + 20;
   },
