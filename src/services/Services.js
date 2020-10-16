@@ -69,6 +69,10 @@ const service = {
     );
     return validaProduto.rows[0].idprodutos;
   },
+  async getProdutoId(idproduto, idestoques){
+    const produto = await pool.query("SELECT * from produtos where idprodutos = $1 and idestoques = $2",[idproduto, idestoques]);
+    return produto.rows[0];
+  },
   //gera Compras no fornecedor
   async geraComprasF(objeto, req, idnotafiscal) {
     const { idestoques, idfornecedor, idprodutof, qnt, custo } = req.body;
