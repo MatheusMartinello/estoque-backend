@@ -1,4 +1,4 @@
-const pool = require('../Database/db')
+const pool = require("../Database/db");
 const service = {
   geraData() {
     const d = new Date();
@@ -11,7 +11,7 @@ const service = {
         "SELECT * FROM produtos WHERE nome like $1 and idestoques = $2",
         [nome, parseInt(idEmpresa, 10)]
       );
-      console.log(produto.rows.length)
+      console.log(produto.rows.length);
       if (produto.rows.length === 0) return null;
       else return produto.rows[0];
     } catch (error) {
@@ -44,7 +44,13 @@ const service = {
     if (validaProduto.rows.length === 0) {
       const result = await pool.query(
         "INSERT INTO produtos(nome,quantidade,custo,idestoques,medida) VALUES ($1,$2,$3,$4,$5)",
-        [objeto.nome.toUpperCase(), objeto.qnt, objeto.custo, idestoques, medida]
+        [
+          objeto.nome.toUpperCase(),
+          objeto.qnt,
+          objeto.custo,
+          idestoques,
+          medida,
+        ]
       );
       console.log(result.rows);
     } else {
@@ -61,7 +67,7 @@ const service = {
       return result.rows;
     }
   },
-  //pega produto pelo ID 
+  //pega produto pelo ID
   async getIdProduto(objeto, idestoques) {
     const validaProduto = await pool.query(
       "SELECT * from produtos where nome like $1 and idestoques = $2",
@@ -69,8 +75,11 @@ const service = {
     );
     return validaProduto.rows[0].idprodutos;
   },
-  async getProdutoId(idproduto, idestoques){
-    const produto = await pool.query("SELECT * from produtos where idprodutos = $1 and idestoques = $2",[idproduto, idestoques]);
+  async getProdutoId(idproduto, idestoques) {
+    const produto = await pool.query(
+      "SELECT * from produtos where idprodutos = $1 and idestoques = $2",
+      [idproduto, idestoques]
+    );
     return produto.rows[0];
   },
   //gera Compras no fornecedor
@@ -152,6 +161,6 @@ const service = {
         aux = element;
     }
     return aux;
-  }
-}
+  },
+};
 module.exports = service;

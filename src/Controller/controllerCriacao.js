@@ -1,10 +1,10 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const pool = require('../Database/db');
+const pool = require("../Database/db");
 function controllerCriacao() {
   return (req, res, next) => {
     next();
-  }
+  };
 }
 //cria estoque
 router.post("/", async (req, res) => {
@@ -16,7 +16,7 @@ router.post("/", async (req, res) => {
   if (empresa.rows.length == 0) {
     const newEmpresa = await pool.query(
       "INSERT INTO estoques ( idestoques, nome, endereco,telefone,tipo) VALUES($1,$2,$3,$4,$5)",
-      [ idestoques,nome, endereco, telefone, tipo]
+      [idestoques, nome, endereco, telefone, tipo]
     );
     res.json(newEmpresa);
   } else {
@@ -56,22 +56,31 @@ router.get("/produto:id", async (req, res) => {
 router.post("/fornecedor", async (req, res) => {
   const { Nome, telefone, endereco } = req.body;
   try {
-    const result = await pool.query('INSERT INTO fornecedor("Nome",telefone,endereco)values($1,$2,$3)', [Nome, telefone, endereco]);
-    res.send('Forncedor Adicionado ---\n')
+    const result = await pool.query(
+      'INSERT INTO fornecedor("Nome",telefone,endereco)values($1,$2,$3)',
+      [Nome, telefone, endereco]
+    );
+    res.send("Forncedor Adicionado ---\n");
   } catch (err) {
-    console.error(err)
+    console.error(err);
   }
 });
 //gera produto do fornecedor ---
 router.post("/fornecedor/produto", async (req, res) => {
-  const { nome, qnt, valor, idfornecedor, codigobarras, medida} = req.body;
+  const { nome, qnt, valor, idfornecedor, codigobarras, medida } = req.body;
   try {
-    await pool.query('INSERT INTO "produtosFornecedor"(idfornecedor,nome,qnt,custo,codigobarras, medida) values ($1,$2,$3,$4,$5,$6)', [idfornecedor, nome, qnt, valor, codigobarras, medida]);
-    const result = await pool.query('SELECT * from "produtosFornecedor"')
-    res.send("Produto fornecedor adicionado com sucesso!\nID do produto ==>" + result.rows[0].idProdutosE);
+    await pool.query(
+      'INSERT INTO "produtosFornecedor"(idfornecedor,nome,qnt,custo,codigobarras, medida) values ($1,$2,$3,$4,$5,$6)',
+      [idfornecedor, nome, qnt, valor, codigobarras, medida]
+    );
+    const result = await pool.query('SELECT * from "produtosFornecedor"');
+    res.send(
+      "Produto fornecedor adicionado com sucesso!\nID do produto ==>" +
+        result.rows[0].idProdutosE
+    );
   } catch (err) {
-    console.error(err)
+    console.error(err);
   }
-})
+});
 
 module.exports = (controllerCriacao, (app) => app.use("/criacao", router));

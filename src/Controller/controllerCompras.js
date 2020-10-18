@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const pool = require('../Database/db')
-const servico = require('../services/Services');
+const pool = require("../Database/db");
+const servico = require("../services/Services");
 function controllerCompras() {
   return (req, res, next) => {
     next();
@@ -12,10 +12,10 @@ router.post("/proposta", async (req, res) => {
   const geraCotacaoId = await servico.geraPedidoCotacao(idusuario);
   geraCotacaoId
     ? await geraCotacoesNosEstoques(
-      idproduto,
-      idusuario,
-      geraCotacaoId.rows[0].max
-    )
+        idproduto,
+        idusuario,
+        geraCotacaoId.rows[0].max
+      )
     : res.status(400).send("Nao foi possivel gerar cotacao");
   const result = await pool.query(
     "SELECT * from cotacoes_produtos where idcotacoes = $1",
