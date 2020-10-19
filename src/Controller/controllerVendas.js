@@ -12,22 +12,7 @@ function controllerCriacao() {
     next();
   };
 }
-router.post("/adiciona/carrinho/", async (req, res) => {
-  const { idprodtuos, idestoque, idusuario, quantidade } = req.body;
-  await pool.query(
-    "INSERT INTO carrinho(idproduto,idestoque,idcarrinho,idusuario,valortotal,quantidade) values($1,$2,$3,$4,$5,$6)",
-    [idprodtuos, idestoque, idcarrinho, idusuario, valortotal, quantidade]
-  );
-  res.send("Produto adicionado ao carrinho!");
-});
-router.post("/remover/carrinho", async (req, res) => {
-  const { idprodutos, idcarrinho } = req.body;
-  await pool.query(
-    "DELETE FROM carrinho where idprodutos = $1 and idcarrinho = $2",
-    [idprodutos, idcarrinho]
-  );
-  res.send("Produto removido do carrinho :)");
-});
+
 router.post("/picking", async (req, res) => {
   const {
     idcarrinho,
@@ -63,34 +48,36 @@ router.post("/remove/picking", async (req, res) => {
   );
   res.send("Picking removido!");
 });
+//Cria venda
 router.post("/finalizar", async (req, res) => {
-  const { idcarrinho, idusuario } = req.body;
-  const getCarrinho = await pool.query(
-    "Select * from carrinho where idcarrinho = $1 and idusuario = $2",
-    [idcarrinho, idusuario]
-  );
-  for (let index = 0; index < getCarrinho.rows.length; index++) {
-    const element = getCarrinho.rows[index];
-    const produto = servico.getProdutoId(
-      element.idprodutos,
-      element.idestoques
-    );
-    const n_quantidade =
-      parseInt(produto.quantidade, 10) - parseInt(getCarrinho.quantidade, 10);
-    await pool.query(
-      "Update produtos set quantidade = $1 where idproduto = $2 and idestoques = $3",
-      [n_quantidade, produto.idprodutos, produto.idestoques]
-    );
-    await pool.query(
-      "DELETE FROM carrinho WHERE idcarrinho = $1 and idprodutos = $2",
-      [getCarrinho.idcarrinho, getCarrinho.produtos]
+  const {
+    idprodutos,
+    idusuario,
+    frete,
+    tributos,
+    formapagamento,
+    valortotal,
+  } = req.body;
+  const idvenda = await servico.pegaVendaId();
+  const idnotafiscal = servico.geraNota("venda");
+  for (let index = 0; index < idprodutos.length; index++) {
+    servico.diminuiProduto(idprodutos[index]);
+    servico.adicionarVenda(
+      idprodutos[index],
+      idnotafiscal,
+      idusuario,
+      frete,
+      tributos,
+      formapagamento,
+      valortotal,
+      idvenda
     );
   }
-  res.send("Carrinho limpo, venda adicionada");
+  res.send("Carrinho limpo, venda adicionada com sucesso");
 });
 router.get("/vitrine", async (req, res) => {
   const produtos = await pool.query("SELECT * from produtos");
-  res.send(produtos.rows);
+  res.json(await servico.vitrine(produtos.rows));
 });
 
 module.exports = (controllerCriacao, (app) => app.use("/venda", router));

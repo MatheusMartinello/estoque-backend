@@ -162,5 +162,73 @@ const service = {
     }
     return aux;
   },
+  vitrine(objeto) {
+    for (let index = 0; index < objeto.length - 1; index++) {
+      for (let j = 0; j < objeto.length - 1; j++) {
+        if (objeto[j].quantidade < objeto[j + 1].quantidade) {
+          let temp = objeto.rows[j];
+          objeto[j] = objeto.rows[j + 1];
+          objeto[j + 1] = temp;
+        }
+      }
+    }
+
+    return objeto;
+  },
+  async diminuiProduto(array) {
+    try {
+      const produto = await pool.query(
+        "SELECT quantidade FROM produtos WHERE idprodutos = $1 and idestoques = $2",
+        [array[0], array[1]]
+      );
+      const n_quantidade = parseInt(produto.rows[0].quantidade) - array[2];
+      await pool.query(
+        "update produtos set quantidade = $1 where idprodutos = $2 and idestoques = $3",
+        [n_quantidade, array[0], array[1]]
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  async pegaVendaId() {
+    const idvenda = await pool.query("SELECT MAX(IDVENDAS) from venda");
+    console.log(idvenda.rows[0]);
+    if (idvenda.rows[0].max === null) {
+      return 1;
+    } else return parseInt(idvenda.rows[0].max) + 1;
+  },
+  async adicionarVenda(
+    array,
+    idnotafiscal,
+    idusuario,
+    frete,
+    tributos,
+    formapagamento,
+    valortotal,
+    idvenda
+  ) {
+    try {
+      for (let index = 0; index < array.length - 1; index++) {
+        const element = array[index];
+      }
+      await pool.query(
+        "INSERT INTO venda(idprodutos,idestoques,idnotafiscal,idusuario,frete,tributos,formapagamento,valortotal,idvendas)" +
+          "values($1,$2,$3,$4,$5,$6,$7,$8,$9)",
+        [
+          array[0],
+          array[1],
+          await idnotafiscal,
+          idusuario,
+          frete,
+          tributos,
+          formapagamento,
+          valortotal,
+          await idvenda,
+        ]
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  },
 };
 module.exports = service;
