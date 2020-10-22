@@ -165,7 +165,7 @@ const service = {
   vitrine(objeto) {
     for (let index = 0; index < objeto.length - 1; index++) {
       for (let j = 0; j < objeto.length - 1; j++) {
-        if (objeto[j].quantidade < objeto[j + 1].quantidade) {
+        if (objeto[j].quantidade > objeto[j + 1].quantidade) {
           let temp = objeto.rows[j];
           objeto[j] = objeto.rows[j + 1];
           objeto[j + 1] = temp;
