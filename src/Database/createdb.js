@@ -213,5 +213,96 @@ const db = {
         ");"
     );
   },
+  async populabd() {
+    await pool.query(
+      "INSERT INTO fornecedor(nome,endereco,telefone)values($1,$2,$3)",
+      ["barracao distribuidora".toLocaleUpperCase(), "Rua rua", "3003030"]
+    );
+    await pool.query(
+      "INSERT INTO fornecedor(nome,endereco,telefone)values($1,$2,$3)",
+      ["mundo distribuidora".toLocaleUpperCase(), "Rua rua", "3003030"]
+    );
+    await pool.query(
+      "INSERT INTO fornecedor(nome,endereco,telefone)values($1,$2,$3)",
+      ["Tinellos distribuidora".toLocaleUpperCase(), "Rua rua", "3003030"]
+    );
+    await pool.query(
+      'INSERT INTO "produtosFornecedor"(idfornecedor,nome,quantidade,custo, codigobarras,medida,url)values($1,$2,$3,$34,$5,$6,$7',
+      [
+        1,
+        "caneta",
+        15,
+        "2.50",
+        "1085016",
+        "gramas",
+        "https://graffite.vteximg.com.br/arquivos/ids/162793-1000-1000/shopping.png?v=636995026143930000",
+      ]
+    );
+    await pool.query(
+      'INSERT INTO "produtosFornecedor"(idfornecedor,nome,quantidade,custo, codigobarras,medida,url)values($1,$2,$3,$34,$5,$6,$7',
+      [
+        2,
+        "Caderno",
+        15,
+        "25.50",
+        "10852016",
+        "gramas",
+        "https://d26lpennugtm8s.cloudfront.net/stores/001/073/365/products/company-ultra-systemflex-cartao-fibra-091-2e009f14016870662e15741736423737-1024-1024.png",
+      ]
+    );
+    await pool.query(
+      'INSERT INTO "produtosFornecedor"(idfornecedor,nome,quantidade,custo, codigobarras,medida,url)values($1,$2,$3,$34,$5,$6,$7',
+      [
+        3,
+        "Carro",
+        10,
+        "35000.00",
+        "10852016",
+        "Tonelada",
+        "https://www.chevrolet.com.br/content/dam/chevrolet/mercosur/brazil/portuguese/index/cars/cars-subcontent/segmento-carros/02-images/cruze-premier.png?imwidth=960",
+      ]
+    );
+    await pool.query(
+      "INSERT INTO estoques(nome,endereco,telefone)values($1,$2,$3)",
+      ["Martinello revenda".toLocaleUpperCase(), "Rua rua", "3003030"]
+    );
+    await pool.query(
+      "INSERT INTO estoques(nome,endereco,telefone)values($1,$2,$3)",
+      ["Alex revenda".toLocaleUpperCase(), "Rua rua", "3003030"]
+    );
+    await pool.query(
+      'INSERT INTO "produtos"(idestoques,nome,quantidade,custo, codigobarras,medida,url)values($1,$2,$3,$34,$5,$6,$7',
+      [
+        1,
+        "Carro",
+        10,
+        "35000.00",
+        "10852016",
+        "Tonelada",
+        "https://www.chevrolet.com.br/content/dam/chevrolet/mercosur/brazil/portuguese/index/cars/cars-subcontent/segmento-carros/02-images/cruze-premier.png?imwidth=960",
+      ]
+    );
+    await pool.query(
+      'INSERT INTO "produtos"(idestoques,nome,quantidade,custo, codigobarras,medida,url)values($1,$2,$3,$34,$5,$6,$7',
+      [
+        2,
+        "Caderno",
+        15,
+        "25.50",
+        "10852016",
+        "gramas",
+        "https://d26lpennugtm8s.cloudfront.net/stores/001/073/365/products/company-ultra-systemflex-cartao-fibra-091-2e009f14016870662e15741736423737-1024-1024.png",
+      ]
+    );
+    await pool.query(
+      1,
+      "caneta",
+      15,
+      "2.50",
+      "1085016",
+      "gramas",
+      "https://graffite.vteximg.com.br/arquivos/ids/162793-1000-1000/shopping.png?v=636995026143930000"
+    );
+  },
 };
 module.exports = db;

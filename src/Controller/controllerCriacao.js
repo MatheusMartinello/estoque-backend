@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../Database/db");
+const create = require("../Database/createdb");
 function controllerCriacao() {
   return (req, res, next) => {
     next();
@@ -82,5 +83,13 @@ router.post("/fornecedor/produto", async (req, res) => {
     console.error(err);
   }
 });
-
+//inicializar banco de dados
+router.get("/cria/banco", async (req, res) => {
+  await create.inicializadorBD();
+  res.send("Banco Criado Com sucesso!");
+});
+router.get("/popular/banco", (req, res) => {
+  create.populabd();
+  res.send("Banco Populado!");
+});
 module.exports = (controllerCriacao, (app) => app.use("/criacao", router));

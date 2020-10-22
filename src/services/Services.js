@@ -230,5 +230,50 @@ const service = {
       console.log(error);
     }
   },
+  async adicionaFornecedor(objeto) {
+    const { nome, telefone, endereco } = objeto;
+    try {
+      const verificaExistente = await pool.query(
+        "SELECT nome,idfornecedor FROM forncedor WHERE nome = $1",
+        [nome.toUpperCase()]
+      );
+      if ((verificaExistente.rows.length = 0)) {
+        await pool.query(
+          "INSERT INTO fornecedor(nome,telefone,endereco)values($1,$2,$3)",
+          [nome.toUpperCase(), telefone, endereco]
+        );
+        return "Fornecedor adicionado com sucesso";
+      } else
+        return (
+          "Fornecedor ja cadastrado no banco de dados com id = " +
+          verificaExistente.rows[0].idfornecedor
+        );
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  },
+  async adicionaProdutoFornecedor(objeto) {
+    const {
+      idfornecedor,
+      nome,
+      quantidade,
+      custo,
+      codigobarras,
+      url,
+      medida,
+    } = objeto;
+    try {
+      await pool.query(
+        'insert into "produtosFornecedor"(idfornecedor,nome,quantidade,custo,codigobarras,url,medida)values($1,$2,$3,$4,$5,$6,$7)',
+        [idfornecedor, nome, quantidade, custo, codigobarras, url, medida]
+      );
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  },
+  //async
 };
 module.exports = service;

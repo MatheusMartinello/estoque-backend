@@ -14,7 +14,6 @@ router.post("/produto", async (req, res) => {
     idestoques,
     pegaProdutoF.rows[0].nome
   );
-  const media = parseFloat(pegaProdutoF.rows[0].custo) / quantidade;
   if (verificaProduto !== null) {
     const mediadevalor =
       (quantidade * parseFloat(pegaProdutoF.rows[0].custo, 10) +
@@ -24,7 +23,8 @@ router.post("/produto", async (req, res) => {
       "UPDATE produtos set quantidade = $1, mediadevalor = $2 where idprodutos = $3",
       [quantidade, mediadevalor, verificaProduto.idprodutos]
     );
-  } else
+  } else {
+    const media = parseFloat(pegaProdutoF.rows[0].custo) / quantidade;
     await pool.query(
       "INSERT INTO produtos(nome,quantidade,codigobarras,createat,medida,mediadevalor,idestoques,custo) values($1,$2,$3,$4,$5,$6,$7,$8)",
       [
@@ -38,11 +38,11 @@ router.post("/produto", async (req, res) => {
         pegaProdutoF.rows[0].custo,
       ]
     );
+  }
   const idproduto = await pool.query(
     "select idprodutos from produtos where nome = $1",
     [pegaProdutoF.rows[0].nome]
   );
-
   await pool.query(
     'INSERT INTO "comprasFornecedor"("idProdutosE",idfornecedor, idprodutos,idestoques,idnotafiscal) values ($1,$2,$3,$4,$5)',
     [
