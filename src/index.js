@@ -8,7 +8,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 require("./Controller/controllerCompras")(app);
 require("./Controller/controllerCriacao")(app);
-db.criaBanco();
+try {
+  db.criaBanco();
+} catch (error) {
+  console.error(error);
+}
+
 // require("./controller/controllerEntrada")(app);
 require("./controller/controllerVendas")(app);
 

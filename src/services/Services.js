@@ -4,6 +4,13 @@ const service = {
     const d = new Date();
     return d.toLocaleString();
   },
+  async qntProdutos({ idprodutos, idestoques }) {
+    const qnt = await pool.query(
+      "SELECT quantidade FROM produtos WHERE idprodutos = $1 and idestoques = $2",
+      [idprodutos, idestoques]
+    );
+    return qnt.rows[0];
+  },
   // Verifica Produto base de dados
   async verificaNaBase(idEmpresa, nome) {
     try {
@@ -274,6 +281,68 @@ const service = {
       return false;
     }
   },
-  //async
+  //testar
+  async adionaReserva(objeto) {
+    try {
+      await pool.query(
+        "INSERT INTO RESERVA(idprodutos,idestoques,quantidade)values($1,$2,$3)",
+        [objeto.idprodutos, objeto.idestoques, objeto.quantidade]
+      );
+      const quantidade =
+        parseInt(this.qntProdutos(objeto)) - parseInt(objeto.quantidade);
+      await pool.query(
+        "UPDATE produtos SET quantidade = $1 where idprotudos = $2 AND idestoques = $3",
+        [quantidade, idprodutos, idestoques]
+      );
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  },
+  //testar
+  async cancelaReserva(objeto) {
+    try {
+      const quantidade = await pool.query(
+        "SELECT quantidade from reserva where idestoques = $1 and idprodutos = $2",
+        [objetos.idestoques, objetos.idprodutos]
+      );
+      const atual =
+        parseInt(this.qntProdutos(objeto)) - parseInt(quantidade.rows[0]);
+      await pool.query(
+        "DELETE FROM reserva WHERE idestoques = $1 and idprodutos = $2",
+        [objeto.idestoques, objeto.idprodutos]
+      );
+      await pool.query(
+        "UPDATE produtos SET quantidade = $1 where idestoques = $2 and idprotudos = $3",
+        [atual, objeto.idestoques, objeto.idprodutos]
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  //testar
+  async inventario({ idestoques }) {
+    try {
+      const qntProdutos = await pool.query(
+        "SELECT idproduto,quantidade FROM produtos WHERE idestoques = $1 ",
+        [idestoques]
+      );
+      const qntReserva = await pool.query(
+        "SELECT idprodutos,idestoques from reserva where idestoques = $1",
+        [idestoques]
+      );
+      for (let i = 0; i < array.length; i++) {
+        for (let j = 0; j < array.length; j++) {
+          if (qntProdutos.rows[i].idprodutos === qntReserva.rows[j].idprodutos)
+            qntProdutos.rows[i].quantidade =
+              parseInt(qntProdutos.rows[i].quantidade) +
+              parseInt(qntReserva.rows[j].quantidade);
+        }
+      }
+      return qntProdutos;
+    } catch (error) {
+      console.log(error);
+    }
+  },
 };
 module.exports = service;

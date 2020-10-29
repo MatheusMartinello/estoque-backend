@@ -11,94 +11,94 @@ const db = {
   async criaBanco() {
     //cria tabela Estoque
     await pool.query(
-      "CREATE TABLE 'estoques'" +
+      'CREATE TABLE "estoques"' +
         +"(" +
-        +"'idestoques' serial NOT NULL," +
-        +"'nome'       varchar(100) NOT NULL," +
-        +"'endereco'   varchar(100) NOT NULL," +
-        +"'telefone'   int4range NOT NULL," +
-        +"'tipo'       varchar(50) NOT NULL," +
-        +"CONSTRAINT 'PK_estoques' PRIMARY KEY ( 'idestoques' )" +
+        +"idestoques serial NOT NULL," +
+        +"nome       varchar(100) NOT NULL," +
+        +"endereco   varchar(100) NOT NULL," +
+        +"telefone   int4range NOT NULL," +
+        +"tipo       varchar(50) NOT NULL," +
+        +"CONSTRAINT PK_estoques PRIMARY KEY ( idestoques )" +
         +");"
     );
     //cria tabela produtos
     await pool.query(
       'CREATE TABLE "produtos"' +
         "(" +
-        ' "idprodutos"     serial NOT NULL,' +
-        ' "nome"           varchar(50) NOT NULL,' +
-        ' "quantidade"     int NOT NULL,' +
-        '"codigodebarras" int NOT NULL,' +
-        ' "createat"       date NOT NULL,' +
-        '"custo"          numeric NOT NULL,' +
-        '"valormedio"     numeric NOT NULL,' +
-        '"medida"         varchar(50) NOT NULL,' +
-        '"url"            varchar(250) NOT NULL,' +
-        '"idestoques"     integer NOT NULL,' +
-        'CONSTRAINT "PK_produtos" PRIMARY KEY ( "idprodutos", "idestoques" ),' +
-        'CONSTRAINT "FK_21" FOREIGN KEY ( "idestoques" ) REFERENCES "estoques" ( "idestoques" )' +
+        " idprodutos     serial NOT NULL," +
+        " nome           varchar(50) NOT NULL," +
+        " quantidade     int NOT NULL," +
+        " codigodebarras int NOT NULL," +
+        " createat       date NOT NULL," +
+        " custo          numeric NOT NULL," +
+        " valormedio     numeric NOT NULL," +
+        " medida         varchar(50) NOT NULL," +
+        " url            varchar(250) NOT NULL," +
+        " idestoques     integer NOT NULL," +
+        "CONSTRAINT PK_produtos PRIMARY KEY ( idprodutos, idestoques )," +
+        "CONSTRAINT FK_21 FOREIGN KEY ( idestoques ) REFERENCES estoques ( idestoques )" +
         ");"
     );
     //cria tabela usuario
     await pool.query(
-      'CREATE TABLE "usuario"' +
+      "CREATE TABLE usuario" +
         "(" +
-        '"idusuario" serial NOT NULL,' +
-        '"nome"      varchar(50) NOT NULL,' +
-        '"cpf"       integer NOT NULL,' +
-        'CONSTRAINT "PK_usuario" PRIMARY KEY ( "idusuario" )' +
+        "idusuario serial NOT NULL," +
+        "nome      varchar(50) NOT NULL," +
+        "cpf       integer NOT NULL," +
+        "CONSTRAINT PK_usuario PRIMARY KEY ( idusuario )" +
         ");"
     );
     //cria tabela de notafiscal
     await pool.query(
-      'CREATE TABLE "notafiscal"' +
+      "CREATE TABLE notafiscal" +
         "(" +
-        '"idnotafiscal" serial NOT NULL,' +
-        '"tipo"         varchar(50) NOT NULL,' +
-        '"createat"     date NOT NULL,' +
-        'CONSTRAINT "PK_notafiscal" PRIMARY KEY ( "idnotafiscal" )' +
+        "idnotafiscal serial NOT NULL," +
+        "tipo         varchar(50) NOT NULL," +
+        "createat     date NOT NULL," +
+        "CONSTRAINT PK_notafiscal PRIMARY KEY ( idnotafiscal )" +
         ");"
     );
     //cria tabela de venda
     await pool.query(
-      'CREATE TABLE "venda"' +
+      "CREATE TABLE venda" +
         "(" +
-        '"idvenda"        int4range NOT NULL,' +
-        '"idprodutos"     integer NOT NULL,' +
-        '"idestoques"     integer NOT NULL,' +
-        '"frete"          numeric NOT NULL,' +
-        '"tributos"       numeric NOT NULL,' +
-        '"formapagamento" varchar(50) NOT NULL,' +
-        '"valortotal"      NOT NULL,' +
-        '"idusuario"      integer NOT NULL,' +
-        '"idnotafiscal"   integer NOT NULL,' +
-        'CONSTRAINT "PK_venda" PRIMARY KEY ( "idvenda", "idprodutos", "idestoques", "idusuario", "idnotafiscal" ),' +
-        'CONSTRAINT "FK_36" FOREIGN KEY ( "idprodutos", "idestoques" ) REFERENCES "produtos" ( "idprodutos", "idestoques" ),' +
-        'CONSTRAINT "FK_40" FOREIGN KEY ( "idusuario" ) REFERENCES "usuario" ( "idusuario" )' +
-        ' CONSTRAINT "FK_56" FOREIGN KEY ( "idnotafiscal" ) REFERENCES "notafiscal" ( "idnotafiscal" )' +
+        "idvenda        int4range NOT NULL," +
+        "idprodutos     integer NOT NULL," +
+        "idestoques     integer NOT NULL," +
+        "frete          numeric NOT NULL," +
+        "tributos       numeric NOT NULL," +
+        "formapagamento varchar(50) NOT NULL," +
+        "valortotal      NOT NULL," +
+        "idusuario      integer NOT NULL," +
+        "idnotafiscal   integer NOT NULL," +
+        "CONSTRAINT PK_venda PRIMARY KEY ( idvenda, idprodutos, idestoques, idusuario, idnotafiscal )," +
+        "CONSTRAINT FK_36 FOREIGN KEY ( idprodutos, idestoques ) REFERENCES produtos ( idprodutos, idestoques )," +
+        "CONSTRAINT FK_40 FOREIGN KEY ( idusuario ) REFERENCES usuario ( idusuario )" +
+        "CONSTRAINT FK_56 FOREIGN KEY ( idnotafiscal ) REFERENCES notafiscal ( idnotafiscal )" +
         ");"
     );
     //consumo interno
     await pool.query(
-      'CREATE TABLE "consumointerno"' +
+      "CREATE TABLE consumointerno" +
         "(" +
-        '"idconsumointerno" serial NOT NULL,' +
-        '"createat"         date NOT NULL,' +
-        '"idprodutos"       integer NOT NULL,' +
-        '"idestoques"       integer NOT NULL,' +
-        'CONSTRAINT "PK_consumointerno" PRIMARY KEY ( "idconsumointerno", "idprodutos", "idestoques" ),' +
-        'CONSTRAINT "FK_47" FOREIGN KEY ( "idprodutos", "idestoques" ) REFERENCES "produtos" ( "idprodutos", "idestoques" )' +
+        "idconsumointerno serial NOT NULL," +
+        "createat         date NOT NULL," +
+        "idprodutos       integer NOT NULL," +
+        "idestoques       integer NOT NULL," +
+        "CONSTRAINT PK_consumointerno PRIMARY KEY ( idconsumointerno, idprodutos, idestoques )," +
+        "CONSTRAINT FK_47 FOREIGN KEY ( idprodutos, idestoques ) REFERENCES produtos ( idprodutos, idestoques )" +
         ");"
     );
     //cria tabela fornecedor
     await pool.query(
-      'CREATE TABLE "fornecedor"' +
+      "CREATE TABLE fornecedor" +
         "(" +
-        '"idfornecedor" serial NOT NULL,' +
-        '"Nome"         varchar(50) NOT NULL,' +
-        '"endereco"     varchar(50) NOT NULL,' +
-        '"telefone"     integer NOT NULL,' +
-        'CONSTRAINT "PK_fornecedor" PRIMARY KEY ( "idfornecedor" )' +
+        "idfornecedor serial NOT NULL," +
+        "Nome         varchar(50) NOT NULL," +
+        "endereco     varchar(50) NOT NULL," +
+        "telefone     integer NOT NULL," +
+        "CONSTRAINT PK_fornecedor PRIMARY KEY ( idfornecedor )" +
         ");"
     );
     //cria tabela produtosFornecedor
