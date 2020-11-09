@@ -1,3 +1,4 @@
+const controllerCompras = require("../Controller/controllerCompras");
 const pool = require("../Database/db");
 const service = {
   geraData() {
@@ -344,5 +345,14 @@ const service = {
       console.log(error);
     }
   },
+  async contasAhPagar({
+    idestoques,
+    idusuario,
+    valor,
+    data_venda,
+    notaFiscal = 0,
+    ordemDeServico = 0,
+    folhaPagamento = 0,
+  }) {},
 };
 module.exports = service;

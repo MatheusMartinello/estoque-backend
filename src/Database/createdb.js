@@ -212,6 +212,18 @@ const db = {
         'CONSTRAINT "FK_148" FOREIGN KEY ( "idordemfornecimento" ) REFERENCES "ordemfornecimento" ( "idordemfornecimento" )' +
         ");"
     );
+    await pool.query(
+      "CREATE TABLE contasapagar(" +
+        "idcontasapagar SERIAL NOT NULL," +
+        "valor numeric NOT NULL," +
+        "data date NOT NULL," +
+        "idnotafiscal integer NOT NULL" +
+        "aberto boolean" +
+        "cancelado boolean" +
+        "liquidado boolean" +
+        "substituido boolean" +
+        'CONSTRAINT "PK_NF34" FOREIGN KEY( "idnotafiscal") references notafiscal("idnotafiscal") '
+    );
   },
   async populabd() {
     await pool.query(
