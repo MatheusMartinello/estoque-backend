@@ -213,6 +213,15 @@ const db = {
         ");"
     );
     await pool.query(
+      "CREATE TABLE movimentos(" +
+        "idmovimentos SERIAL NOT NULL" +
+        "data Date not null" +
+        "valororiginal numeric not null" +
+        "juros numeric" +
+        "multa numeric " +
+        "tipo varchar(55) "
+    );
+    await pool.query(
       "CREATE TABLE contasapagar(" +
         "idcontasapagar SERIAL NOT NULL," +
         "valor numeric NOT NULL," +
@@ -222,7 +231,9 @@ const db = {
         "cancelado boolean" +
         "liquidado boolean" +
         "substituido boolean" +
-        'CONSTRAINT "PK_NF34" FOREIGN KEY( "idnotafiscal") references notafiscal("idnotafiscal") '
+        "idmovimentos integer not null" +
+        'CONSTRAINT "PK_NF34" FOREIGN KEY( "idnotafiscal") references notafiscal("idnotafiscal") ' +
+        'CONSTRAINT "PK_MV35" FOREIGN KEY( "idmovimentos") references movimentos("idmovimentos") '
     );
   },
   async populabd() {
