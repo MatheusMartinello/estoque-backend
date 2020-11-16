@@ -1,17 +1,14 @@
-const pool = require("../Database/db");
+const pool = require("../../Database/db");
+function geraData() {
+  time = new Date(Date.now()).toISOString().replace("T", " ").replace("Z", "");
+  return time;
+}
 const service = {
-  geraData() {
-    time = new Date(Date.now())
-      .toISOString()
-      .replace("T", " ")
-      .replace("Z", "");
-    return time;
-  },
-  async geraMovimentacao({ valor, situacao, juros = 0, multa = 0 }) {
+  async geraMovimentacao({ valorTotal, situacao, juros = 0, multa = 0 }) {
     try {
       await pool.query(
         "INSERT INTO movimentos(data,valororiginal,tipo,juros,multa)values($1,$2,$3,$4,$5)",
-        [this.geraData(), valor, situacao, juros, multa]
+        [geraData(), valorTotal, situacao, juros, multa]
       );
       const result = await pool.query(
         "SELECT MAX(idmovimentos) from movimentos"

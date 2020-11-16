@@ -9,17 +9,17 @@ function controllerContasAPagar() {
 }
 router.post("/adicionar", async (req, res) => {
   const { data, notafiscal, valorTotal, situacao, valorAberto = 0 } = req.body;
-  const idmovimentacao = geraMovimentacao(req.body);
+  const idmovimentacao = await geraMovimentacao(req.body);
   try {
     await pool.query(
-      "INSERT INTO contasapagar(data,idnotafiscal,valor,situacao,valorAberto,idmovimentacao) values ($1,$2,$3,$4,$5,$6)",
+      "INSERT INTO contasapagar(data,idnotafiscal,valor,situacao,valorAberto,idmovimentos) values ($1,$2,$3,$4,$5,$6)",
       [
         data,
-        notafiscal,
-        valorTotal,
+        parseInt(notafiscal),
+        parseFloat(valorTotal),
         situacao.toUpperCase(),
-        valorAberto,
-        idmovimentacao,
+        parseFloat(valorAberto),
+        parseInt(idmovimentacao),
       ]
     );
   } catch (error) {
@@ -30,31 +30,32 @@ router.post("/adicionar", async (req, res) => {
 //retorna todas as contas a pagar em aberto
 router.get("/abertos", async (req, res) => {
   const result = await pool.query(
-    'SELECT data,notafiscal,valor from contasapagar WHERE situacao = "ABERTO"'
+    "SELECT data,idnotafiscal,valor,situacao from contasapagar WHERE situacao like 'ABERTO'"
   );
   res.send(result.rows);
 });
 //pega todos as notas liquidados
 router.get("/liquidado", async (req, res) => {
   const result = await pool.query(
-    'SELECT data,notafiscal,valor from contas a pagar WHERE situacao = "LIQUIDADO"'
+    "SELECT data,idnotafiscal,valor from contasapagar WHERE situacao like 'LIQUIDADO'"
   );
   res.send(result.rows);
 });
 //pega todas as notas substituidos
 router.get("/substituidos", async (req, res) => {
   const result = await pool.query(
-    'SELECT data,notafiscal,valor from contas a pagar WHERE situacao = "SUBSTITUIDO"'
+    "SELECT data,idnotafiscal,valor,situacao from contasapagar WHERE situacao like 'SUBSTITUIDO'"
   );
   res.send(result.rows);
 });
 //pega todas as notas canceladas
 router.get("/cancelado", async (req, res) => {
   const result = await pool.query(
-    'SELECT data,notafiscal,valor from contas a pagar WHERE situacao = "CANCELADO"'
+    "SELECT data,notafiscal,valor from contasapagar WHERE situacao like 'CANCELADO'"
   );
   res.send(result.rows);
 });
+
 router.put("/atualizar", async (req, res) => {
   const { idcontasapagar, situacao, valor } = req.body;
   const pegaBase = await pool.query(
