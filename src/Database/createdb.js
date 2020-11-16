@@ -232,6 +232,8 @@ const db = {
     //     "situacao varchar(55) NOT NULL," +
     //     "idmovimentos integer not null," +
     //     "valorpago numeric," +
+    //     "formapag varchar(55)"+
+    //     "datavenc date"+
     //     'CONSTRAINT "PK_CA35" PRIMARY KEY("idcontasapagar"),' +
     //     'CONSTRAINT "FK_NF34" FOREIGN KEY( "idnotafiscal") references notafiscal("idnotafiscal"), ' +
     //     'CONSTRAINT "FK_MV35" FOREIGN KEY( "idmovimentos") references movimentos("idmovimentos")' +
@@ -246,6 +248,8 @@ const db = {
         "situacao varchar(55) NOT NULL," +
         "idmovimentos integer not null," +
         "valorpago numeric," +
+        "formapag varchar(55)" +
+        "datavenc date" +
         'CONSTRAINT "PK_CR36" PRIMARY KEY("idcontasareceber"),' +
         'CONSTRAINT "FK_NF36" FOREIGN KEY( "idnotafiscal") references notafiscal("idnotafiscal"), ' +
         'CONSTRAINT "FK_MV36" FOREIGN KEY( "idmovimentos") references movimentos("idmovimentos")' +

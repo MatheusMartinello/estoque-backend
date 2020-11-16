@@ -8,20 +8,46 @@ function controllerContasAPagar() {
   };
 }
 router.post("/adicionar", async (req, res) => {
-  const { data, notafiscal, valorTotal, situacao, valorAberto = 0 } = req.body;
+  const {
+    data,
+    notafiscal,
+    valorTotal,
+    situacao,
+    valorPago = 0,
+    formapag = null,
+    datavenc = null,
+  } = req.body;
   const idmovimentacao = await geraMovimentacao(req.body);
   try {
-    await pool.query(
-      "INSERT INTO contasapagar(data,idnotafiscal,valor,situacao,valorAberto,idmovimentos) values ($1,$2,$3,$4,$5,$6)",
-      [
-        data,
-        parseInt(notafiscal),
-        parseFloat(valorTotal),
-        situacao.toUpperCase(),
-        parseFloat(valorAberto),
-        parseInt(idmovimentacao),
-      ]
-    );
+    if (valorTotal > valorPago) {
+      await pool.query(
+        "INSERT INTO contasapagar(data,idnotafiscal,valor,situacao,valorAberto,idmovimentos,formapag,venc) values ($1,$2,$3,$4,$5,$6,$7,$8)",
+        [
+          data,
+          parseInt(notafiscal),
+          parseFloat(valorTotal),
+          "ABERTO",
+          parseFloat(valorPago),
+          parseInt(idmovimentacao),
+          formapag,
+          datavenc,
+        ]
+      );
+    } else {
+      await pool.query(
+        "INSERT INTO contasapagar(data,idnotafiscal,valor,situacao,valorAberto,idmovimentos,formapag,venc) values ($1,$2,$3,$4,$5,$6,$7,$8)",
+        [
+          data,
+          parseInt(notafiscal),
+          parseFloat(valorTotal),
+          situacao.toUpperCase(),
+          parseFloat(valorPago),
+          parseInt(idmovimentacao),
+          formapag,
+          datavenc,
+        ]
+      );
+    }
   } catch (error) {
     console.error(error);
   }
