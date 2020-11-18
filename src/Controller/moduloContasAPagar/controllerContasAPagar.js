@@ -132,6 +132,14 @@ router.put("/atualizar", async (req, res) => {
       const idnovo = await pool.query(
         "SELECT MAX(idcontasapagar) from contasapagar"
       );
+      await pool.query(
+        "UPDATE contasapagar SET situacao = $1, valor = 0.0 where idcontasapagar = $2",
+        [
+          "LIQUIDADO POR SUBSTITUIDO POR TITULO : " + idnovo.rows[0].max,
+          idcontasapagar,
+        ]
+      );
+
       res.send("ID substituido = " + idnovo.rows[0].max);
     } catch (error) {
       console.log(error);
