@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../Database/db");
-const servico = require("../services/Services");
+const pool = require("../../Database/db");
+const servico = require("../../services/Services");
 //gera entrada do produto adicionando na base de dado
 router.post("/produto", async (req, res) => {
   const { idProdutosE, idfornecedor, idestoques, quantidade } = req.body;

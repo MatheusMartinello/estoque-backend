@@ -81,7 +81,7 @@ router.get("/cancelado", async (req, res) => {
   );
   res.send(result.rows);
 });
-
+//atualiza as contas a pagar
 router.put("/atualizar", async (req, res) => {
   const { idcontasapagar, situacao, valor } = req.body;
   const pegaBase = await pool.query(
@@ -94,7 +94,7 @@ router.put("/atualizar", async (req, res) => {
         'update contasapagar set valorAberto = $1, situacao = "ABERTO" where idcontasapagar = $2',
         [valor, idcontasapagar]
       );
-      res.send("success");
+      res.send("201");
     } catch (error) {
       console.log(error);
     }
@@ -104,7 +104,7 @@ router.put("/atualizar", async (req, res) => {
         'update contasapagar set valorAberto = 0, situacao = "LIQUIDADO" where idcontasapagar = $1',
         idcontasapagar
       );
-      res.send("success");
+      res.send("201");
     } catch (error) {
       console.error(error);
     }
@@ -114,7 +114,7 @@ router.put("/atualizar", async (req, res) => {
         'UPDATE contasapagar set valorAberto = 0, valorTotal = 0, situacao = "CANCELADO" where idcontasapagar = $1',
         [idcontasapagar]
       );
-      res.send("success");
+      res.send("201");
     } catch (error) {
       console.log(error);
     }
